@@ -7,6 +7,7 @@ e(Maze,n(X1,Y1),n(X2,Y2)):-
      Y1 = Y2, (X1 is X2+1;X1 is X2-1)).
 
 %When called, Visited must include a list with the startnode in it.
+%ex) path(Maze,StartNode,EndNode,Path,[StartNode]) -> Where Maze is a 2D List and Start & End nodes are of the form n(X,Y).
 
 path(_,Node,Node,[Node], [Node|T]).
 
