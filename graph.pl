@@ -8,6 +8,7 @@ e(Maze,n(X1,Y1),n(X2,Y2)):-
 
 %When called, Visited must include a list with the startnode in it.
 %ex) path(Maze,StartNode,EndNode,Path,[StartNode]) -> Where Maze is a 2D List and Start & End nodes are of the form n(X,Y).
+%ex) path([[1,0,0,0,0],[1,1,0,0,0],[0,1,1,1,0],[0,1,0,1,0],[0,1,1,1,1]], n(0,0), n(4,4), Path, [n(0,0)]).
 
 path(_,Node,Node,[Node], [Node|T]).
 
