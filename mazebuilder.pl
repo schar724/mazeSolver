@@ -4,12 +4,12 @@
 
 % run(N):-
 %     read_file(N,List),,write(Path).
-
+:- use_module(library(ansi_term)).
 
 run(N):-
     read_file(N,List),
-    printMaze(List),
-    path(List, n(_,_,1,0), n(_,_,0,1), Path, [n(_,_,1,0)]),nl,
+    printMaze(List),!,
+    path(List, n(_,_,1,0), n(_,_,0,1), Path, [n(_,_,1,0)]),nl,  
     replace(List, Path, 'X',R).
 
 
@@ -54,9 +54,6 @@ e(Maze,n(X1,Y1,S1,E1),n(X2,Y2,S2,E2)):-
     (X1 = X2, (Y1 is Y2+1;Y1 is Y2-1);
      Y1 = Y2, (X1 is X2+1;X1 is X2-1)).
 
-
-
-
 printMaze([]).
 printMaze([H|T]):-
     printRow(H),nl,
@@ -70,19 +67,6 @@ printRow([H|T]):-
     H = 9,write('E');
     write('X')),
     write(" "),printRow(T).
-
-
-% getSolvedList(List,[],List).
-% getSolvedList(List, [n(X,Y,S,E)|T], Result):-
-%     replace(List,X,Y,'X',R),
-%     getSolvedList(R,T).
-
-% getSolvedList(List,[],R):- write(R).
-% getSolvedList(List,[n(X,Y,S,E)|T],R):-
-%     write(List),nl,
-%     replace(List,X,Y,'X',R),
-%     getSolvedList(R,T,R).
-
 
 replace(L,[],Z,L):-printMaze(L).
 replace(L, [n(X,Y,S,E)|T], Z, R):-
