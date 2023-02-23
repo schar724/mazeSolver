@@ -1,16 +1,12 @@
 % Takes in a file and returns a list of lists of integers
 % TODO: Error handling
 
-
-% run(N):-
-%     read_file(N,List),,write(Path).
-:- use_module(library(ansi_term)).
-
 run(N):-
     read_file(N,List),
     printMaze(List),!,
     path(List, n(_,_,1,0), n(_,_,0,1), Path, [n(_,_,1,0)]),nl,  
     replace(List, Path, 'X',R).
+
 
 
 read_file(Filename, Rows) :-
