@@ -2,8 +2,9 @@
 
 :- use_module(writer).
 :- use_module(graph).
+:- use_module(mazebuilder).
 
 
-run:-
-    path([[1,1,1]], n(0,0),n(2,0), Path, [n(0,0)]),write(Path).
+run(N):-
+    read_file(N, List), path(List, n(1,1), n(4,6), Path, [n(1,1)]),write(Path).
 
