@@ -8,10 +8,4 @@ goodbyeMessage:-
 
 
 
-replace(L, X, Y, Z, R):-
-    append(RowPfx, [Row|RowSfx], L),
-    length(RowPfx,X),
-    append(ColPfx,[_|ColSfx],Row),
-    length(ColPfx,Y),
-    append(ColPfx,[Z|ColSfx],RowNew),
-    append(RowPfx,[RowNew|RowSfx], R).
+
