@@ -7,13 +7,17 @@ run(N):-
     read_file(N,List),
     printMaze(List),!,
     path(List, n(_,_,1,0), n(_,_,0,1), Path, [n(_,_,1,0)]),nl,  
-    replace(List, Path, 'X',R).
+    replace(List, Path, 'X',_).
 
 
 /* The read_file/2 predicate opens a file, reads its contents line by line, and converts
  * each line into a list of integers. */
 read_file(Filename, Rows) :-
-    open(Filename, read, Stream),
+catch(
+    open(Filename, read, Stream), error(existence_error(_, _), _), (
+            write('Error: Could not open file.'),
+            fail
+            )),
     read_lines(Stream, Rows),
     close(Stream).
 
@@ -28,9 +32,24 @@ read_lines(Stream, [Row|Rows]) :-
     % Convert those codes to a list of integers
     atom_codes(Atom, Line),
     atomic_list_concat(Strings, ' ', Atom),
-    maplist(atom_number, Strings, Row),
+    catch(
+       maplist(parse_int, Strings, Row),
+        error(existence_error(_, _), _),
+        (
+            write('Error: Invalid symbol in file'),
+            nl,
+            fail
+        )),
+    % maplist(parse_int, Strings, Row),
     % Read the next line of the file
     read_lines(Stream, Rows).
+
+parse_int(String, Int) :-
+    atom_number(String, Int),
+    (Int =:= 0 ; Int =:= 1 ; Int =:= 8 ; Int =:= 9), !.
+parse_int(_, _) :-
+    % format("Error: invalid number ~w~n", [String]),
+    throw(error(existence_error(_, _), _)).
 
 /* The path/5 predicate finds a path from the start node to the end node in the given maze.
  * It uses the e/3 predicate to check if two nodes are adjacent, and uses a list of visited
@@ -71,13 +90,13 @@ printRow([H|T]):-
     H = 8,!,write('S');
     H = 1,!,write(" ");
     H = 9,write('E');
-    write('X')),
+    ansi_format([fg(green)], '~w', ['X'])),
     write(" "),printRow(T).
 
 /* The replace/4 predicate takes a maze, a list of nodes, a character to replace,
  * and outputs the modified maze with the nodes replaced by the character. */
-replace(L,[],Z,L):-printMaze(L).
-replace(L, [n(X,Y,S,E)|T], Z, R):-
+replace(L,[],_,L):-printMaze(L).
+replace(L, [n(X,Y,_,_)|T], Z, R):-
     append(RowPfx, [Row|RowSfx], L),
     length(RowPfx,Y),
     append(ColPfx,[_|ColSfx],Row),
