@@ -7,8 +7,6 @@ run(N):-
     path(List, n(_,_,1,0), n(_,_,0,1), Path, [n(_,_,1,0)]),nl,  
     replace(List, Path, 'X',R).
 
-
-
 read_file(Filename, Rows) :-
     open(Filename, read, Stream),
     read_lines(Stream, Rows),
@@ -32,7 +30,6 @@ read_lines(Stream, [Row|Rows]) :-
 
 
 path(_,Node,Node,[Node], [Node|_]).
-
 path(Maze, StartNode, EndNode, [StartNode|Rest], Visited):-
     e(Maze, StartNode,NextNode),
     not(member(NextNode, Visited)),append([NextNode], Visited, NewVisited),
@@ -64,12 +61,13 @@ printRow([H|T]):-
     write('X')),
     write(" "),printRow(T).
 
+% replace method modified from https://github.com/ProjetoAplp/resta1-prolog/blob/master/resta1.pl
 replace(L,[],Z,L):-printMaze(L).
 replace(L, [n(X,Y,S,E)|T], Z, R):-
-    append(RowPfx, [Row|RowSfx], L),
-    length(RowPfx,Y),
-    append(ColPfx,[_|ColSfx],Row),
-    length(ColPfx,X),
-    append(ColPfx,[Z|ColSfx],RowNew),
-    append(RowPfx,[RowNew|RowSfx], R),
+    append(RowPfx, [Row|RowSfx], L),    % decompose the list-of-lists into a prefix, a list and a suffix
+    length(RowPfx,Y),                   % check the prefix length: do we have the desired list?
+    append(ColPfx,[_|ColSfx],Row),      % decompose that row into a prefix, a column and a suffix
+    length(ColPfx,X),                   % check the prefix length: do we have the desired column?
+    append(ColPfx,[Z|ColSfx],RowNew),   % if so, replace the column with its new value
+    append(RowPfx,[RowNew|RowSfx], R),  % and assemble the transformed list-of-lists
     replace(R,T,Z,_).
