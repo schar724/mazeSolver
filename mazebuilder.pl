@@ -7,16 +7,11 @@ run(N):-
     read_file(N,List),
     printMaze(List),!,
     path(List, n(_,_,1,0), n(_,_,0,1), Path, [n(_,_,1,0)]),nl,  
-<<<<<<< HEAD
-    replace(List, Path, 'X',R).
-
-=======
     replace(List, Path, 'X',_).
 
 
 /* The read_file/2 predicate opens a file, reads its contents line by line, and converts
  * each line into a list of integers. */
->>>>>>> testing_suite
 read_file(Filename, Rows) :-
 catch(
     open(Filename, read, Stream), error(existence_error(_, _), _), (
@@ -97,17 +92,6 @@ printRow([H|T]):-
     ansi_format([fg(green)], '~w', ['X'])),
     write(" "),printRow(T).
 
-<<<<<<< HEAD
-% replace method modified from https://github.com/ProjetoAplp/resta1-prolog/blob/master/resta1.pl
-replace(L,[],Z,L):-printMaze(L).
-replace(L, [n(X,Y,S,E)|T], Z, R):-
-    append(RowPfx, [Row|RowSfx], L),    % decompose the list-of-lists into a prefix, a list and a suffix
-    length(RowPfx,Y),                   % check the prefix length: do we have the desired list?
-    append(ColPfx,[_|ColSfx],Row),      % decompose that row into a prefix, a column and a suffix
-    length(ColPfx,X),                   % check the prefix length: do we have the desired column?
-    append(ColPfx,[Z|ColSfx],RowNew),   % if so, replace the column with its new value
-    append(RowPfx,[RowNew|RowSfx], R),  % and assemble the transformed list-of-lists
-=======
 /* The replace/4 predicate takes a maze, a list of nodes, a character to replace,
  * and outputs the modified maze with the nodes replaced by the character. */
 replace(L,[],_,L):-printMaze(L).
@@ -118,5 +102,4 @@ replace(L, [n(X,Y,_,_)|T], Z, R):-
     length(ColPfx,X),
     append(ColPfx,[Z|ColSfx],RowNew),
     append(RowPfx,[RowNew|RowSfx], R),
->>>>>>> testing_suite
     replace(R,T,Z,_).
