@@ -1,73 +1,78 @@
-:- consult(mazebuilder).
+:- consult(mazesolver).
 
 :- begin_tests(mazesolver).
 
 test(one_path, [nondet]) :-
     nl,
-    run('test0.txt'),
+    run('tests/simple_path_rest_walls.txt'),
     nl.
 
-test(donut_path, [forall(run('test1.txt'))]) :-
+test(perfect_maze,[nondet]) :-
+    nl,nl,
+    run('tests/perfect_maze.txt'),
     nl.
 
-test(multi_path, [forall(run('test2.txt'))]) :-
+test(cycle_path, [forall(run('tests/one_cycle_rest_walls.txt'))]) :-
     nl.
 
-test(test3, [nondet]) :-
+test(multi_path, [forall(run('tests/imperfect_maze_multiple_soln.txt'))]) :-
+    nl.
+
+test(imperfect_maze, [nondet]) :-
     nl,
-    run('test3.txt'),
+    run('tests/imperfect_maze.txt'),
     nl.
 
-test(test4, [fail]) :-
+test(no_exit, [fail]) :-
     nl,
-    run('test4.txt'),
+    run('tests/no_exit.txt'),
     nl.
 
-test(test5, [fail]) :-
+test(empty_file, [fail]) :-
     nl,
-    run('test5.txt'),
+    run('tests/empty_file.txt'),
     nl.
 
-test(test6, [fail]) :-
+test(all_walls_no_s_or_e, [fail]) :-
     nl,
-    run('test6.txt'),
+    run('tests/all_walls_no_s_or_e.txt'),
     nl.
 
-test(test7, [fail]) :-
+test(all_paths_no_s_or_e, [fail]) :-
     nl,
-    run('test7.txt'),
+    run('tests/all_paths_no_s_or_e.txt'),
     nl.
 
-test(test8, [nondet]) :-
+test(multiple_exits, [nondet]) :-
     nl,
-    run('test8.txt'),
+    run('tests/multiple_exits.txt'),
     nl.
 
-/*test(test8, [forall(run('test8.txt'))]) :-
+/* test(test8, [forall(run('tests/multiple_exits.txt'))]) :-
     nl.*/
 
-test(test9, [nondet]) :-
+test(adjacent_s_and_e, [nondet]) :-
     nl,
-    run('test9.txt'),
+    run('tests/adjacent_s_and_e.txt'),
     nl.
 
-test(test10, [nondet]) :-
+test(smaller_dims, [nondet]) :-
     nl,
-    run('test10.txt'),
+    run('tests/smaller_dims.txt'),
     nl.
 
-test(test11, [fail]) :-
+test(rectangle_no_path, [fail]) :-
     nl,
-    run('test11.txt'),
+    run('tests/rectangle_no_path.txt'),
     nl.
 
-test(file_fail, [fail]) :-
+test(illegal_char, [fail]) :-
     nl,
-    run('test12.txt'),
+    run('tests/illegal_char.txt'),
     nl.
 
 test(file_not_found, [fail]) :-
     nl,
-    run('test.txt').
+    run('does_not_exist.txt').
 
 :- end_tests(mazesolver).

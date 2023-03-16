@@ -1,8 +1,6 @@
-% TODO: Error handling
-
 /* The run/1 predicate is the main entry point of the program. It reads the maze file,
- * prints it to the console, finds a path from the start to the end of the maze, and
- * replaces the path with 'X' characters in the printed maze. */
+   prints it to the console, finds a path from the start to the end of the maze, and
+   replaces the path with 'X' characters in the printed maze. */
 run(N):-
     read_file(N,List),
     printMaze(List),!,
@@ -11,7 +9,7 @@ run(N):-
 
 
 /* The read_file/2 predicate opens a file, reads its contents line by line, and converts
- * each line into a list of integers. */
+   each line into a list of integers. */
 read_file(Filename, Rows) :-
 catch(
     open(Filename, read, Stream), error(existence_error(_, _), _), (
@@ -22,15 +20,14 @@ catch(
     close(Stream).
 
 /* The read_lines/2 predicate is a helper predicate used by read_file/2. It reads each line of
- * the file and converts it to a list of integers. */
+   the file and converts it to a list of integers. */
 read_lines(Stream, []) :-
     at_end_of_stream(Stream),!.
 
 read_lines(Stream, [Row|Rows]) :-
-    % Read a line of the file as characters and turn them into character codes
-    read_line_to_codes(Stream, Line),
-    % Convert those codes to a list of integers
-    atom_codes(Atom, Line),
+    
+    read_line_to_codes(Stream, Line),       % Read a line of the file as characters and turn them into character codes
+    atom_codes(Atom, Line),                 % Convert those codes to a list of integers
     atomic_list_concat(Strings, ' ', Atom),
     catch(
        maplist(parse_int, Strings, Row),
@@ -40,20 +37,18 @@ read_lines(Stream, [Row|Rows]) :-
             nl,
             fail
         )),
-    % maplist(parse_int, Strings, Row),
-    % Read the next line of the file
     read_lines(Stream, Rows).
 
 parse_int(String, Int) :-
     atom_number(String, Int),
     (Int =:= 0 ; Int =:= 1 ; Int =:= 8 ; Int =:= 9), !.
+
 parse_int(_, _) :-
-    % format("Error: invalid number ~w~n", [String]),
     throw(error(existence_error(_, _), _)).
 
 /* The path/5 predicate finds a path from the start node to the end node in the given maze.
- * It uses the e/3 predicate to check if two nodes are adjacent, and uses a list of visited
- * nodes to avoid infinite loops. */
+   It uses the e/3 predicate to check if two nodes are adjacent, and uses a list of visited
+   nodes to avoid infinite loops. */
 path(_,Node,Node,[Node], [Node|_]).
 path(Maze, StartNode, EndNode, [StartNode|Rest], Visited):-
     e(Maze, StartNode,NextNode),
@@ -80,9 +75,9 @@ printMaze([H|T]):-
     printMaze(T).
 
 /* The printRow/1 predicate prints a row of the maze to the console. It takes a list
- * of integers as input, where each integer corresponds to a different type of maze cell.
- * It uses Prolog's built-in if-then-else construct to print the appropriate character
- * for each cell type, followed by a space character. */
+   of integers as input, where each integer corresponds to a different type of maze cell.
+   It uses Prolog's built-in if-then-else construct to print the appropriate character
+   for each cell type, followed by a space character. */
 printRow([]).
 printRow([H|T]):-
     (H = 0,!,write('#');
@@ -93,13 +88,14 @@ printRow([H|T]):-
     write(" "),printRow(T).
 
 /* The replace/4 predicate takes a maze, a list of nodes, a character to replace,
- * and outputs the modified maze with the nodes replaced by the character. */
+   and outputs the modified maze with the nodes replaced by the character. 
+   modified from https://github.com/ProjetoAplp/resta1-prolog/blob/master/resta1.pl */
 replace(L,[],_,L):-printMaze(L).
 replace(L, [n(X,Y,_,_)|T], Z, R):-
-    append(RowPfx, [Row|RowSfx], L),
-    length(RowPfx,Y),
-    append(ColPfx,[_|ColSfx],Row),
-    length(ColPfx,X),
-    append(ColPfx,[Z|ColSfx],RowNew),
-    append(RowPfx,[RowNew|RowSfx], R),
+    append(RowPfx, [Row|RowSfx], L),    % decompose the list-of-lists into a prefix, a list and a suffix
+    length(RowPfx,Y),                   % check the prefix length: do we have the desired list?
+    append(ColPfx,[_|ColSfx],Row),      % decompose that row into a prefix, a column and a suffix
+    length(ColPfx,X),                   % check the prefix length: do we have the desired column?
+    append(ColPfx,[Z|ColSfx],RowNew),   % if so, replace the column with its new value
+    append(RowPfx,[RowNew|RowSfx], R),  % and assemble the transformed list-of-lists
     replace(R,T,Z,_).
