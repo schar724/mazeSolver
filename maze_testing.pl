@@ -1,6 +1,6 @@
-:- consult(mazesolver).
+:- consult(main).
 
-:- begin_tests(mazesolver).
+:- begin_tests(main).
 
 test(one_path, [nondet]) :-
     nl,
@@ -75,4 +75,4 @@ test(file_not_found, [fail]) :-
     nl,
     run('does_not_exist.txt').
 
-:- end_tests(mazesolver).
+:- end_tests(main).
